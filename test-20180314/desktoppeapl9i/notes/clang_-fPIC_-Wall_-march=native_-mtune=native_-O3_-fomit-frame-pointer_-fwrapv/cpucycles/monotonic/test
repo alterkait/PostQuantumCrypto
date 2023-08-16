@@ -1,0 +1,5 @@
+cpucycles.o: In function `pqcpucycles_impl':
+cpucycles.c:(.text+0x40): undefined reference to `sysctlbyname'
+cpucycles.o: In function `pqcpucycles_impl_persecond':
+cpucycles.c:(.text+0xd9): undefined reference to `sysctlbyname'
+clang: error: linker command failed with exit code 1 (use -v to see invocation)

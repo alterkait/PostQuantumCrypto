@@ -1,0 +1,5 @@
+cpucycles.o: In function `pqcpucycles_impl':
+cpucycles.c:(.text+0xb6): undefined reference to `sysctlbyname'
+cpucycles.o: In function `pqcpucycles_impl_persecond':
+cpucycles.c:(.text+0x131): undefined reference to `sysctlbyname'
+collect2: error: ld returned 1 exit status
