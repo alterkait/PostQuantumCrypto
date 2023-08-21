@@ -456,3 +456,157 @@ cd ..
 ls
 apt install git
 exit 
+git init
+ls
+git add .
+git commit -m "initial commit"
+git remote add origin https://github.com/alterkait/PostQuantumCrypto.git
+git push -u origin master 
+git remote add origin git@github.com:alterkait/PostQuantumCrypto.git
+git push -u origin master 
+git push -u origin main 
+git push -u origin master ls
+ls
+touch README.md
+vim README.md 
+git add README.md 
+git commit -m "Added readme"
+git push
+ls
+cd POST-QUANTUM/
+ls
+./dynamic_communication 
+cat dynamic_communication.c 
+ls
+touch dynamic_communication_readme.txt
+vim dynamic_communication_readme.txt 
+cat dynamic_communication_readme.txt 
+./dynamic_communication.c
+./dynamic_communication
+ls
+cat kyber_dilithium_test.c
+./kyber_dilithium_test 
+cat dynamic_communication.c
+ls
+rm dynamic_communication_readme.txt 
+ls
+./simulation
+cat simulation.c 
+cd ..
+ls
+cd include
+ls
+cd ..
+ls
+cd POST-QUANTUM/
+ls
+mkdir background
+cd background/
+touch dilithium2.c
+vim dilithium2.c 
+gcc -g -o dilithium2 dilithium2.c -I /home/libpqcrypto/include -L /home/libpqcrypto/lib -Wl,-rpath=/home/libpqcrypto/lib -lpqcrypto
+vim dilithium2.c 
+gcc -g -o dilithium2 dilithium2.c -I /home/libpqcrypto/include -L /home/libpqcrypto/lib -Wl,-rpath=/home/libpqcrypto/lib -lpqcrypto
+vim dilithium2.c 
+gcc -g -o dilithium2 dilithium2.c -I /home/libpqcrypto/include -L /home/libpqcrypto/lib -Wl,-rpath=/home/libpqcrypto/lib -lpqcrypto
+cd ..
+cd include
+ls
+cat pqcrypto_sign_rainbow3c.h
+cat pqcrypto_sign_dilithium2.h
+cd.
+cd ..
+ls
+cd ..
+ls
+cd alterkait/
+ls
+cd MastersWSL/
+ls
+touch wordsleft.py
+exit
+ls
+cd SOCKET/
+ls
+scp public.pem alterkait@raspberrypi:/home/libpqcrypto/SOCKET
+scp public.pem raspberrypi@192.168.1.170:/home/libpqcrypto/SOCKET
+scp public.pem alterkait@192.168.1.170:/home/libpqcrypto/SOCKET
+scp public.pem alterkait.raspberrypi@192.168.1.170:/home/libpqcrypto/SOCKET
+scp public.pem alterkait@raspberrypi:/home/libpqcrypto/SOCKET
+scp public.pem raspberrypi@192.168.1.170:/home/libpqcrypto/SOCKET
+scp public.pem alterkait@192.168.1.170:/home/alterkait
+scp public.pem raspberrypi@192.168.1.170:/home/libpqcrypto/SOCKET/ 
+scp public.pem alterkait@raspberrypi:/home/libpqcrypto/SOCKET/
+scp public.pem alterkait@192.168.1.170:/home/libpqcrypto/SOCKET/
+scp public.pem alterkait@192.168.1.170:/home/alterkait/
+ls
+gcc classical_server.c -o classical_server -lcrypto -lssl
+vim classical_server.c
+gcc classical_server.c -o classical_server -lcrypto -lssl
+./classical_server 
+vim classical_server.c
+gcc classical_server.c -o classical_server -lcrypto -lssl
+vim classical_server.c
+./classical_server 
+vim classical_server.c
+gcc classical_server.c -o classical_server -lcrypto -lssl
+./classical_server 
+netstat -tln | grep 8080
+vim classical_server.c
+ls
+cat classical_server.c
+./classical_server 
+ls
+cd SOCKET/
+ls
+gcc classical_server.c -o classical_server -lcrypto -lssl
+./classical_server 
+ls
+cat client.c
+ls
+./client 
+ls
+rm classical_server
+rm classical_server.c 
+ls
+rm private.pem public.pem 
+ls
+classical_server.py
+touch classical_server.py
+vim classical_server.py 
+openssl genpkey -algorithm RSA -out private.pem 
+openssl rsa -pubout -in private.pem -out public.pem 
+ls
+scp public.pem alterkait@192.168.1.170:/home/alterkait/
+ls
+rm classical_server.py 
+ls
+touch classical_client.c
+vim classical_client.c 
+rm classical_client.c 
+touch classical_server.c
+vim classical_server.c 
+gcc classical_server.c -o classical_server -lssl -lcrypto
+ls
+./classical_server 
+vim classical_server.c
+gcc classical_server.c -o classical_server -lssl -lcrypto
+./classical_server 
+ifconfig
+./classical_server 
+ipconfig
+ifconfig
+ip addr show eth0
+./classical_server 
+vim classical_server.c
+gcc classical_server.c -o classical_server -lssl -lcrypto
+./classical_server 
+vim classical_server.c
+gcc classical_server.c -o classical_server -lssl -lcrypto
+./classical_server 
+telnet 127.0.0.1 8080
+ifconfig
+telnet 172.30.95.130 8080
+telnet 172.30.95.130 9090
+telnet 127.0.0.1 9090
+exit

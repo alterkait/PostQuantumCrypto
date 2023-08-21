@@ -12,15 +12,15 @@
 ~h
 # Command Line History (newest to oldest):
 :x
-|2,0,1692159955,,"x"
+|2,0,1692578681,,"x"
+:X
+|2,0,1692561698,,"X"
 :q!
 |2,0,1692157843,,"q!"
 :q
 |2,0,1692088838,,"q"
 :z
 |2,0,1692081332,,"z"
-:X
-|2,0,1691994915,,"X"
 
 # Search String History (newest to oldest):
 
@@ -32,6 +32,103 @@
 
 # Registers:
 ""1	CHAR	0
+	
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	
+	#include <socke
+|3,1,1,0,6,0,1692559675,"","#include <stdio.h>","#include <stdlib.h>","#include <string.h>","","#include <socke"
+"2	CHAR	0
+	t
+	#include <arpa/inet.h>
+	#include <openssl/rsa.h>
+	#include <openssl/pem.h>
+	
+	#define PORT 8080
+	
+	int main() {
+	    int server_fd, client_fd;
+	    struct sockaddr_in address;
+	    unsigned char buffer[2048] = {0};
+	    unsigned char decrypted[2048] = {0};
+	
+	    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+	    address.sin_family = AF_INET;
+	    address.sin_addr.s_addr = INADDR_ANY;
+	    address.sin_port = htons(PORT);
+	
+	    bind(server_fd, (struct sockaddr *)&address, sizeof(address));
+	    listen(server_fd, 3);
+	
+	    printf("Listening...\n");
+	
+	    client_fd = accept(server_fd, NULL, NULL);
+	
+	    read(client_fd, buffer, sizeof(buffer));
+	
+	    // RSA Decryption
+	    FILE *privateKey = fopen("private.pem", "rb");
+	    RSA *rsa = PEM_read_RSAPrivateKey(privateKey, NULL, NULL, NULL);
+	    RSA_private_decrypt(RSA_size(rsa), buffer, decrypted, rsa, RSA_PKCS1_PADDING);
+	
+	    printf("Received: %s\n", decrypted);
+	
+	    fclose(privateKey);
+	    close(client_fd);
+	    close(server_fd);
+	    return 0;
+	}
+	
+|3,0,2,0,40,0,1692559666,"t","#include <arpa/inet.h>","#include <openssl/rsa.h>","#include <openssl/pem.h>","","#define PORT 8080","","int main() {","    int server_fd, client_fd;","    struct sockaddr_in address;","    unsigned char buffer[2048] = {0};","    unsigned char decrypted[2048] = {0};","","    server_fd = socket(AF_INET, SOCK_STREAM, 0);","    address.sin_family = AF_INET;","    address.sin_addr.s_addr = INADDR_ANY;",>37
+|<"    address.sin_port = htons(PORT);","","    bind(server_fd, (struct sockaddr *)&address, sizeof(address));","    listen(server_fd, 3);","","    printf(\"Listening...\\n\");","","    client_fd = accept(server_fd, NULL, NULL);","","    read(client_fd, buffer, sizeof(buffer));","","    // RSA Decryption","    FILE *privateKey = fopen(\"private.pem\", \"rb\");","    RSA *rsa = PEM_read_RSAPrivateKey(privateKey, NULL, NULL, NULL);",>84
+|<"    RSA_private_decrypt(RSA_size(rsa), buffer, decrypted, rsa, RSA_PKCS1_PADDING);","","    printf(\"Received: %s\\n\", decrypted);","","    fclose(privateKey);","    close(client_fd);","    close(server_fd);","    return 0;","}",""
+"3	CHAR	0
+	 
+	    int serverSocket, newSocket;
+	    struct sockaddr_in serverAddr;
+	    struct sockaddr_storage serverStorage;
+	    socklen_t addr_size;
+	    char buffer[1024];
+	
+	    // Create socket
+	    serverSocket = socket(PF_INET, SOCK_STREAM, 0);
+	
+	    serverAddr.sin_family = AF_INET;
+	    serverAddr.sin_port = htons(SERVER_PORT);
+	    serverAddr.sin_addr.s_addr = inet_addr("0.0.0.0");
+	    memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
+	
+	    printf("Server Started. Waiting for Connection...\n");
+	
+	    if (bind(serverSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
+		    perror("Bind Failed");
+		    exit(EXIT_FAILURE);
+	    }
+	
+	    listen(serverSocket, 5);
+	
+	    addr_size = sizeof serverStorage;
+	    newSocket = accept(serverSocket, (struct sockaddr *) &serverStorage, &addr_size);
+	
+	    printf("Successfully Connected. Receiving encrypted message...\n");
+	
+	    // Receive encrypted message
+	    recv(newSocket, buffer, 1024, 0);
+	    unsigned char decryptedtext[AES_BLOCK_SIZE];
+	
+	    printf("Encrypted message Received. Decrypting...\n");
+	
+	    AES_decrypt((unsigned char*)buffer, decryptedtext, &decryptKey);
+	    printf("Received: %s\n", decryptedtext);
+	
+	    close(newSocket);
+	    close(serverSocket);
+	    
+|3,0,3,0,41,0,1692534034," ","    int serverSocket, newSocket;","    struct sockaddr_in serverAddr;","    struct sockaddr_storage serverStorage;","    socklen_t addr_size;","    char buffer[1024];","","    // Create socket","    serverSocket = socket(PF_INET, SOCK_STREAM, 0);","","    serverAddr.sin_family = AF_INET;","    serverAddr.sin_port = htons(SERVER_PORT);","    serverAddr.sin_addr.s_addr = inet_addr(\"0.0.0.0\");",>69
+|<"    memset(serverAddr.sin_zero, '\\0', sizeof serverAddr.sin_zero);","","    printf(\"Server Started. Waiting for Connection...\\n\");","","    if (bind(serverSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {","	    perror(\"Bind Failed\");","	    exit(EXIT_FAILURE);","    }","","    listen(serverSocket, 5);","","    addr_size = sizeof serverStorage;","    newSocket = accept(serverSocket, (struct sockaddr *) &serverStorage, &addr_size);","",>76
+|<"    printf(\"Successfully Connected. Receiving encrypted message...\\n\");","","    // Receive encrypted message","    recv(newSocket, buffer, 1024, 0);","    unsigned char decryptedtext[AES_BLOCK_SIZE];","","    printf(\"Encrypted message Received. Decrypting...\\n\");","","    AES_decrypt((unsigned char*)buffer, decryptedtext, &decryptKey);","    printf(\"Received: %s\\n\", decryptedtext);","","    close(newSocket);","    close(serverSocket);","    "
+"4	CHAR	0
 	void initAircraft(Aircraft *plane, int id){
 	        sprintf(plane -> flightNumber, "Flight %03d", id);
 	        plane -> altitude = 1000;
@@ -42,8 +139,8 @@
 	
 	        pqcrypto_kem_kyber1024_keypair(plane -> pk, plane->sk);
 	}
-|3,1,1,0,10,0,1692159423,"void initAircraft(Aircraft *plane, int id){","        sprintf(plane -> flightNumber, \"Flight %03d\", id);","        plane -> altitude = 1000;","        plane -> heading = rand() % 361;","        plane -> frequency = (rand() % 50) + 110.0;","        plane -> squawk = rand() % 7778;","        plane -> nextCommunication = rand() % 7;","","        pqcrypto_kem_kyber1024_keypair(plane -> pk, plane->sk);","}"
-"2	CHAR	0
+|3,0,4,0,10,0,1692159423,"void initAircraft(Aircraft *plane, int id){","        sprintf(plane -> flightNumber, \"Flight %03d\", id);","        plane -> altitude = 1000;","        plane -> heading = rand() % 361;","        plane -> frequency = (rand() % 50) + 110.0;","        plane -> squawk = rand() % 7778;","        plane -> nextCommunication = rand() % 7;","","        pqcrypto_kem_kyber1024_keypair(plane -> pk, plane->sk);","}"
+"5	CHAR	0
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
@@ -94,11 +191,11 @@
 	    printf("SESSION INITIALISATION:\n");
 	
 	    for (int i = 0; i < NUM_PLANES; i++) {
-|3,0,2,0,50,0,1692156883,"#include <stdio.h>","#include <stdlib.h>","#include <string.h>","#include <time.h>","#include <unistd.h>","#include \"pqcrypto_kem_kyber1024.h\"","#include \"pqcrypto_sign_dilithium3.h\"","","#define NUM_PLANES 5","#define MAX_ALTITUDE 40000","#define INITIAL_TIME 180","","typedef struct {","    unsigned char secretkey[pqcrypto_kem_kyber1024_SECRETKEYBYTES];","    unsigned char publickey[pqcrypto_kem_kyber1024_PUBLICKEYBYTES];",>19
+|3,0,5,0,50,0,1692156883,"#include <stdio.h>","#include <stdlib.h>","#include <string.h>","#include <time.h>","#include <unistd.h>","#include \"pqcrypto_kem_kyber1024.h\"","#include \"pqcrypto_sign_dilithium3.h\"","","#define NUM_PLANES 5","#define MAX_ALTITUDE 40000","#define INITIAL_TIME 180","","typedef struct {","    unsigned char secretkey[pqcrypto_kem_kyber1024_SECRETKEYBYTES];","    unsigned char publickey[pqcrypto_kem_kyber1024_PUBLICKEYBYTES];",>19
 |<"    int altitude;","    float heading;","    float frequency;","    int squawk;","} Plane;","","typedef struct {","    unsigned char signPublicKey[pqcrypto_sign_dilithium3_PUBLICKEYBYTES];","    unsigned char signSecretKey[pqcrypto_sign_dilithium3_SECRETKEYBYTES];","} ATC;","","Plane planes[NUM_PLANES];","ATC atc;","","void generate_plane_keys(Plane *plane) {","    pqcrypto_kem_kyber1024_keypair(plane->publickey, plane->secretkey);","}","","void generate_atc_sign_keys() {",>77
 |<"    pqcrypto_sign_dilithium3_keypair(atc.signPublicKey, atc.signSecretKey);","}","","int sign_and_send_squawk(Plane *plane, unsigned char* message) {","    unsigned char signedSquawk[pqcrypto_sign_dilithium3_BYTES + sizeof(int)];","    pqcrypto_sign_dilithium3(signedSquawk, NULL, message, sizeof(int), atc.signSecretKey);","    return (pqcrypto_sign_dilithium3_open(message, NULL, signedSquawk, pqcrypto_sign_dilithium3_BYTES + sizeof(int), atc.signPublicKey) == 0);","}","",>14
 |<"int main() {","    srand(time(NULL));","    generate_atc_sign_keys();","","    printf(\"SESSION INITIALISATION:\\n\");","","    for (int i = 0; i < NUM_PLANES; i++) {"
-"3	CHAR	0
+"6	CHAR	0
 	    pqcrypto_kem_kyber1024_keypair(plane->publickey, plane->secretkey);
 	}
 	
@@ -111,259 +208,392 @@
 	    pqcrypto_sign_dilithium3(signedSquawk, NULL, message, sizeof(int), atc.signSecretKey);
 	    return (pqcrypto_sign_dilithium3_open(message, NULL, signedSquawk, pqcrypto_sign_dilithium3_BYTES + sizeof(int), atc.signPublicKey) == 0);
 	
-|3,0,3,0,12,0,1692156412,"    pqcrypto_kem_kyber1024_keypair(plane->publickey, plane->secretkey);","}","","void generate_atc_sign_keys() {","    pqcrypto_sign_dilithium3_keypair(atc.signPublicKey, atc.signSecretKey);","}","","int sign_and_send_squawk(Plane *plane, unsigned char* message) {","    unsigned char signedSquawk[pqcrypto_sign_dilithium3_BYTES + sizeof(int)];",>92
+|3,0,6,0,12,0,1692156412,"    pqcrypto_kem_kyber1024_keypair(plane->publickey, plane->secretkey);","}","","void generate_atc_sign_keys() {","    pqcrypto_sign_dilithium3_keypair(atc.signPublicKey, atc.signSecretKey);","}","","int sign_and_send_squawk(Plane *plane, unsigned char* message) {","    unsigned char signedSquawk[pqcrypto_sign_dilithium3_BYTES + sizeof(int)];",>92
 |<"    pqcrypto_sign_dilithium3(signedSquawk, NULL, message, sizeof(int), atc.signSecretKey);","    return (pqcrypto_sign_dilithium3_open(message, NULL, signedSquawk, pqcrypto_sign_dilithium3_BYTES + sizeof(int), atc.signPublicKey) == 0);",""
-"4	LINE	0
+"7	LINE	0
 	void generate_plane_keys(Plane *plane) {
-|3,0,4,1,1,0,1692156401,"void generate_plane_keys(Plane *plane) {"
-"5	LINE	0
+|3,0,7,1,1,0,1692156401,"void generate_plane_keys(Plane *plane) {"
+"8	LINE	0
 	
 	    for (int simulatedMinutes=0; simulatedMinutes<60; simulatedMinutes++){
-|3,0,5,1,2,0,1692087589,"","    for (int simulatedMinutes=0; simulatedMinutes<60; simulatedMinutes++){"
-"6	LINE	0
+|3,0,8,1,2,0,1692087589,"","    for (int simulatedMinutes=0; simulatedMinutes<60; simulatedMinutes++){"
+"9	LINE	0
 	    	int messagesSent = 0;
 	        for(int i=0; i<NUM_AIRCRAFT; i++){
-|3,0,6,1,2,0,1692087588,"    	int messagesSent = 0;","        for(int i=0; i<NUM_AIRCRAFT; i++){"
-"7	LINE	0
-	        	if(simulatedMinutes == planes[i].nextCommunication){
-	                	updateAircraft(&planes[i], simulatedMinutes);
-|3,0,7,1,2,0,1692087585,"        	if(simulatedMinutes == planes[i].nextCommunication){","                	updateAircraft(&planes[i], simulatedMinutes);"
-"8	LINE	0
-	                        printf("%02d:%02d:00 - Plane %d to ATC: \"%s, altitude is %d feet, heading %.1f degrees on frequency %.1f. Squawk %04d\"\n",
-	                                                simulatedMinutes/60, simul
-|3,0,8,1,2,0,1692087584,"                        printf(\"%02d:%02d:00 - Plane %d to ATC: \\\"%s, altitude is %d feet, heading %.1f degrees on frequency %.1f. Squawk %04d\\\"\\n\",","                                                simulatedMinutes/60, simul"
-"9	LINE	0
-	#include <stdio.h>
-|3,0,9,1,1,0,1692070930,"#include <stdio.h>"
+|3,0,9,1,2,0,1692087588,"    	int messagesSent = 0;","        for(int i=0; i<NUM_AIRCRAFT; i++){"
 "-	CHAR	0
 	
 |3,0,36,0,1,0,1692088828,""
 
 # File marks:
-'0  137  46  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,48,137,46,1692159955,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'1  154  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,49,154,0,1692159875,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'2  154  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,50,154,0,1692159875,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'3  112  25  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,51,112,25,1692159733,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'4  112  25  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,52,112,25,1692159733,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'5  112  25  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,53,112,25,1692159733,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'6  112  25  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,54,112,25,1692159733,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'7  156  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,55,156,0,1692159652,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'8  156  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,56,156,0,1692159652,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
-'9  151  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,57,151,0,1692159652,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
+'0  46  24  ~/SOCKET/aes_client.c
+|4,48,46,24,1692578681,"~/SOCKET/aes_client.c"
+'1  61  0  ~/SOCKET/aes_client.c
+|4,49,61,0,1692578094,"~/SOCKET/aes_client.c"
+'2  61  0  ~/SOCKET/aes_client.c
+|4,50,61,0,1692578094,"~/SOCKET/aes_client.c"
+'3  36  0  ~/SOCKET/aes_client.c
+|4,51,36,0,1692571695,"~/SOCKET/aes_client.c"
+'4  36  0  ~/SOCKET/aes_client.c
+|4,52,36,0,1692571695,"~/SOCKET/aes_client.c"
+'5  36  0  ~/SOCKET/aes_client.c
+|4,53,36,0,1692571695,"~/SOCKET/aes_client.c"
+'6  36  0  ~/SOCKET/aes_client.c
+|4,54,36,0,1692571695,"~/SOCKET/aes_client.c"
+'7  61  0  ~/SOCKET/aes_client.c
+|4,55,61,0,1692571550,"~/SOCKET/aes_client.c"
+'8  61  0  ~/SOCKET/aes_client.c
+|4,56,61,0,1692571550,"~/SOCKET/aes_client.c"
+'9  61  0  ~/SOCKET/aes_client.c
+|4,57,61,0,1692571550,"~/SOCKET/aes_client.c"
 
 # Jumplist (newest first):
--'  137  46  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,137,46,1692159955,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  154  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,154,0,1692159893,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  154  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,154,0,1692159875,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  112  25  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,112,25,1692159754,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  112  25  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,112,25,1692159754,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  112  25  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,112,25,1692159733,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  156  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,156,0,1692159676,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  151  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,151,0,1692159676,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  156  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,156,0,1692159676,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  151  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,151,0,1692159676,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  151  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,151,0,1692159652,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  148  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,148,24,1692159101,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  148  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,148,24,1692159101,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  148  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,148,24,1692159101,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  148  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,148,24,1692159101,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  140  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,140,24,1692158069,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  140  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,140,24,1692158069,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  140  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,140,24,1692158069,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  140  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,140,24,1692158069,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  113  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,113,23,1692157974,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  105  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,105,23,1692157974,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  113  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,113,23,1692157974,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  105  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,105,23,1692157974,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  113  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,113,23,1692157974,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  105  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,105,23,1692157974,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  113  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,113,23,1692157974,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  105  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,105,23,1692157974,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  105  23  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,105,23,1692157843,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  142  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,142,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  134  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,134,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  126  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,126,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  142  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,142,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  134  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,134,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  126  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,126,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  142  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,142,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  134  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,134,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  126  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,126,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  142  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,142,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  134  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,134,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  134  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,134,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  126  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,126,24,1692157793,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  126  24  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,126,24,1692157689,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  143  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,143,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  135  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,135,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  143  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,143,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  135  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,135,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  143  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,143,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  135  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,135,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  143  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,143,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  143  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,143,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  135  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,135,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  135  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,135,0,1692157532,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  132  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,132,0,1692157427,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  132  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,132,0,1692157427,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  132  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,132,0,1692157427,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  140  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,140,0,1692157427,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  132  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,132,0,1692157427,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  132  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,132,0,1692157427,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156913,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156913,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156913,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156913,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156913,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156913,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156913,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156913,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  1  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,1,0,1692156894,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  109  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,109,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  216  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,216,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  92  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,92,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  193  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,193,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  107  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,107,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  213  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,213,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  90  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,90,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  190  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,190,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  208  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,208,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  185  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,185,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  205  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,205,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  182  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,182,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  101  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,101,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  84  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,84,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  99  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,99,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  82  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,82,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  200  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,200,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  177  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,177,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  197  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,197,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  174  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,174,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  211  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,211,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  188  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,188,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  203  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,203,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  180  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,180,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  195  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,195,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  172  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,172,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  192  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,192,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  169  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,169,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  109  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,109,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  216  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,216,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  92  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,92,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  193  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,193,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
--'  107  0  ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
-|4,39,107,0,1692156495,"~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c"
+-'  46  24  ~/SOCKET/aes_client.c
+|4,39,46,24,1692578681,"~/SOCKET/aes_client.c"
+-'  61  0  ~/SOCKET/aes_client.c
+|4,39,61,0,1692578615,"~/SOCKET/aes_client.c"
+-'  61  0  ~/SOCKET/aes_client.c
+|4,39,61,0,1692578094,"~/SOCKET/aes_client.c"
+-'  36  0  ~/SOCKET/aes_client.c
+|4,39,36,0,1692577084,"~/SOCKET/aes_client.c"
+-'  36  0  ~/SOCKET/aes_client.c
+|4,39,36,0,1692577084,"~/SOCKET/aes_client.c"
+-'  36  0  ~/SOCKET/aes_client.c
+|4,39,36,0,1692571695,"~/SOCKET/aes_client.c"
+-'  61  0  ~/SOCKET/aes_client.c
+|4,39,61,0,1692571655,"~/SOCKET/aes_client.c"
+-'  61  0  ~/SOCKET/aes_client.c
+|4,39,61,0,1692571550,"~/SOCKET/aes_client.c"
+-'  61  0  ~/SOCKET/aes_client.c
+|4,39,61,0,1692569464,"~/SOCKET/aes_client.c"
+-'  1  0  ~/SOCKET/aes_client.c
+|4,39,1,0,1692569445,"~/SOCKET/aes_client.c"
+-'  1  0  ~/SOCKET/aes_client.c
+|4,39,1,0,1692569445,"~/SOCKET/aes_client.c"
+-'  1  0  ~/SOCKET/aes_client.c
+|4,39,1,0,1692569445,"~/SOCKET/aes_client.c"
+-'  1  0  ~/SOCKET/aes_client.c
+|4,39,1,0,1692569445,"~/SOCKET/aes_client.c"
+-'  1  0  ~/SOCKET/aes_client.c
+|4,39,1,0,1692569445,"~/SOCKET/aes_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  68  0  ~/SOCKET/rsa_client.c
+|4,39,68,0,1692567775,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  1  0  ~/SOCKET/rsa_client.c
+|4,39,1,0,1692567755,"~/SOCKET/rsa_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
+-'  46  0  ~/SOCKET/classical_client.c
+|4,39,46,0,1692567741,"~/SOCKET/classical_client.c"
 
 # History of marks within files (newest to oldest):
+
+> ~/SOCKET/aes_client.c
+	*	1692578680	0
+	"	46	24
+	^	46	25
+	.	45	24
+	+	60	1
+	+	39	19
+	+	40	16
+	+	41	9
+	+	42	9
+	+	45	24
+
+> ~/SOCKET/rsa_client.c
+	*	1692567774	0
+	"	68	0
+	^	68	0
+	.	67	1
+	+	67	1
+
+> ~/SOCKET/classical_client.c
+	*	1692567740	0
+	"	46	0
+	^	18	0
+	.	16	23
+	+	43	1
+	+	3	19
+	+	4	19
+	+	45	1
+	+	31	39
+	+	16	23
+
+> ~/SOCKET/client.c
+	*	1692564538	0
+	"	24	40
+	^	24	41
+	.	14	125
+	+	39	1
+	+	25	39
+	+	14	125
+
+> ~/SOCKET/classical_server.c
+	*	1692562254	0
+	"	11	16
+	^	11	17
+	.	11	16
+	+	20	1
+	+	1	87
+	+	1	29
+	+	1	115
+	+	1	29
+	+	1	26
+	+	1	50
+	+	1	34
+	+	1	26
+	+	1	38
+	+	1	50
+	+	1	29
+	+	20	0
+	+	19	0
+	+	1	57
+	+	1	34
+	+	1	30
+	+	1	59
+	+	1	60
+	+	1	30
+	+	1	62
+	+	1	72
+	+	1	34
+	+	1	30
+	+	1	74
+	+	18	0
+	+	17	20
+	+	1	14
+	+	1	20
+	+	2	8
+	+	2	6
+	+	3	4
+	+	5	4
+	+	6	4
+	+	8	4
+	+	9	4
+	+	10	4
+	+	11	4
+	+	12	4
+	+	14	4
+	+	16	4
+	+	17	4
+	+	19	0
+	+	1	36
+	+	1	42
+	+	1	27
+	+	1	26
+	+	1	30
+	+	1	26
+	+	1	10
+	+	2	0
+	+	56	1
+	+	11	16
+
+> ~/SOCKET/classical_server.py
+	*	1692551009	0
+	"	1	0
+	^	1	0
+	.	40	1
+	+	40	1
+
+> ~/POST-QUANTUM/background/dilithium2.c
+	*	1692194003	0
+	"	5	12
+	^	5	13
+	.	5	12
+	+	6	16
+	+	4	10
+	+	5	10
+	+	11	1
+	+	1	18
+	+	2	9
+	+	3	17
+	+	6	9
+	+	4	12
+	+	5	12
+
+> ~/POST-QUANTUM/dynamic_communication_readme.txt
+	*	1692177282	0
+	"	25	0
+	^	25	0
+	.	21	0
+	+	7	0
+	+	1	110
+	+	4	80
+	+	6	0
+	+	20	54
+	+	10	62
+	+	13	30
+	+	25	74
+	+	21	0
+
+> ~/README.md
+	*	1692161212	0
+	"	1	183
+	^	1	184
+	.	1	183
+	+	1	183
 
 > ~/POST-QUANTUM/simulation_with_kyber_and_dilithium.c
 	*	1692159954	0
